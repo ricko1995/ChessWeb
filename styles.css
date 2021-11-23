@@ -1,0 +1,295 @@
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  overflow: hidden;
+}
+.board-container{
+    height: 80%;
+    aspect-ratio: 1;
+    position: relative;
+}
+img{
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: -1;
+}
+.board {
+  display: grid;
+  height: 100%;
+  width: 100%;
+  /* background-image: url("./images/chess_board.svg"); */
+  grid-template-columns: repeat(8, 1fr);
+  grid-template-rows: repeat(8, 1fr);
+}
+.piece {
+  width: 90%;
+  aspect-ratio: 1;
+  align-self: center;
+  justify-self: center;
+  background-repeat: no-repeat;
+  background-position: center;
+  cursor: pointer;
+  transition: transform 100ms;
+}
+
+.circle{
+    width: 30%;
+    border-radius: 50%;
+    background-color: hsl(100, 80%, 65%);
+    box-shadow: 0 0 5px 5px hsl(100, 80%, 65%);
+    z-index: 10;
+}
+
+.piece.dragging {
+    --x: 0;
+    --y: 0;
+    position: absolute;
+    width: 12.5%;
+    left: calc(calc(var(--x)*1px) - 6%);
+    top: calc(calc(var(--y)*1px) - 6%);
+}
+
+.piece.selected{
+    transform: scale(1.2);
+}
+.pawn.white {
+  background-image: url("./images/white_pawn.svg");
+}
+.rook.white {
+  background-image: url("./images/white_rook.svg");
+}
+.knight.white {
+  background-image: url("./images/white_knight.svg");
+}
+.bishop.white {
+  background-image: url("./images/white_bishop.svg");
+}
+.queen.white {
+  background-image: url("./images/white_queen.svg");
+}
+.king.white {
+  background-image: url("./images/white_king.svg");
+}
+.pawn.black {
+  background-image: url("./images/black_pawn.svg");
+}
+.rook.black {
+  background-image: url("./images/black_rook.svg");
+}
+.knight.black {
+  background-image: url("./images/black_knight.svg");
+}
+.bishop.black {
+  background-image: url("./images/black_bishop.svg");
+}
+.queen.black {
+  background-image: url("./images/black_queen.svg");
+}
+.king.black {
+  background-image: url("./images/black_king.svg");
+}
+
+.piece[data-coord="11"] {
+  grid-area: 8 / 1;
+}
+.piece[data-coord="21"] {
+  grid-area: 8 / 2;
+}
+.piece[data-coord="31"] {
+  grid-area: 8 / 3;
+}
+.piece[data-coord="41"] {
+  grid-area: 8 / 4;
+}
+.piece[data-coord="51"] {
+  grid-area: 8 / 5;
+}
+.piece[data-coord="61"] {
+  grid-area: 8 / 6;
+}
+.piece[data-coord="71"] {
+  grid-area: 8 / 7;
+}
+.piece[data-coord="81"] {
+  grid-area: 8 / 8;
+}
+
+.piece[data-coord="12"] {
+  grid-area: 7 / 1;
+}
+.piece[data-coord="22"] {
+  grid-area: 7 / 2;
+}
+.piece[data-coord="32"] {
+  grid-area: 7 / 3;
+}
+.piece[data-coord="42"] {
+  grid-area: 7 / 4;
+}
+.piece[data-coord="52"] {
+  grid-area: 7 / 5;
+}
+.piece[data-coord="62"] {
+  grid-area: 7 / 6;
+}
+.piece[data-coord="72"] {
+  grid-area: 7 / 7;
+}
+.piece[data-coord="82"] {
+  grid-area: 7 / 8;
+}
+
+.piece[data-coord="13"] {
+  grid-area: 6 / 1;
+}
+.piece[data-coord="23"] {
+  grid-area: 6 / 2;
+}
+.piece[data-coord="33"] {
+  grid-area: 6 / 3;
+}
+.piece[data-coord="43"] {
+  grid-area: 6 / 4;
+}
+.piece[data-coord="53"] {
+  grid-area: 6 / 5;
+}
+.piece[data-coord="63"] {
+  grid-area: 6 / 6;
+}
+.piece[data-coord="73"] {
+  grid-area: 6 / 7;
+}
+.piece[data-coord="83"] {
+  grid-area: 6 / 8;
+}
+
+.piece[data-coord="14"] {
+  grid-area: 5 / 1;
+}
+.piece[data-coord="24"] {
+  grid-area: 5 / 2;
+}
+.piece[data-coord="34"] {
+  grid-area: 5 / 3;
+}
+.piece[data-coord="44"] {
+  grid-area: 5 / 4;
+}
+.piece[data-coord="54"] {
+  grid-area: 5 / 5;
+}
+.piece[data-coord="64"] {
+  grid-area: 5 / 6;
+}
+.piece[data-coord="74"] {
+  grid-area: 5 / 7;
+}
+.piece[data-coord="84"] {
+  grid-area: 5 / 8;
+}
+
+.piece[data-coord="15"] {
+  grid-area: 4 / 1;
+}
+.piece[data-coord="25"] {
+  grid-area: 4 / 2;
+}
+.piece[data-coord="35"] {
+  grid-area: 4 / 3;
+}
+.piece[data-coord="45"] {
+  grid-area: 4 / 4;
+}
+.piece[data-coord="55"] {
+  grid-area: 4 / 5;
+}
+.piece[data-coord="65"] {
+  grid-area: 4 / 6;
+}
+.piece[data-coord="75"] {
+  grid-area: 4 / 7;
+}
+.piece[data-coord="85"] {
+  grid-area: 4 / 8;
+}
+
+.piece[data-coord="16"] {
+  grid-area: 3 / 1;
+}
+.piece[data-coord="26"] {
+  grid-area: 3 / 2;
+}
+.piece[data-coord="36"] {
+  grid-area: 3 / 3;
+}
+.piece[data-coord="46"] {
+  grid-area: 3 / 4;
+}
+.piece[data-coord="56"] {
+  grid-area: 3 / 5;
+}
+.piece[data-coord="66"] {
+  grid-area: 3 / 6;
+}
+.piece[data-coord="76"] {
+  grid-area: 3 / 7;
+}
+.piece[data-coord="86"] {
+  grid-area: 3 / 8;
+}
+
+.piece[data-coord="17"] {
+  grid-area: 2 / 1;
+}
+.piece[data-coord="27"] {
+  grid-area: 2 / 2;
+}
+.piece[data-coord="37"] {
+  grid-area: 2 / 3;
+}
+.piece[data-coord="47"] {
+  grid-area: 2 / 4;
+}
+.piece[data-coord="57"] {
+  grid-area: 2 / 5;
+}
+.piece[data-coord="67"] {
+  grid-area: 2 / 6;
+}
+.piece[data-coord="77"] {
+  grid-area: 2 / 7;
+}
+.piece[data-coord="87"] {
+  grid-area: 2 / 8;
+}
+
+.piece[data-coord="18"] {
+  grid-area: 1 / 1;
+}
+.piece[data-coord="28"] {
+  grid-area: 1 / 2;
+}
+.piece[data-coord="38"] {
+  grid-area: 1 / 3;
+}
+.piece[data-coord="48"] {
+  grid-area: 1 / 4;
+}
+.piece[data-coord="58"] {
+  grid-area: 1 / 5;
+}
+.piece[data-coord="68"] {
+  grid-area: 1 / 6;
+}
+.piece[data-coord="78"] {
+  grid-area: 1 / 7;
+}
+.piece[data-coord="88"] {
+  grid-area: 1 / 8;
+}
