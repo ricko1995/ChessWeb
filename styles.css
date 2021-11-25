@@ -1,12 +1,11 @@
 body {
   display: flex;
   justify-content: center;
-  align-items: center;
-  height: 100vh;
   overflow: hidden;
 }
 .board-container{
-    height: 80%;
+    width: 80vh;
+    margin-top: 3rem;
     aspect-ratio: 1;
     position: relative;
 }

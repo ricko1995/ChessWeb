@@ -6,8 +6,13 @@ const START_POSITION = {
 
 const board = document.getElementById('board')
 
-board.addEventListener('mousemove', (e) => {
+
+board.addEventListener('touchmove', (e) => {
     e.preventDefault()
+    if (!e.x) {
+      e.x = e.touches[0].clientX
+      e.y = e.touches[0].clientY
+    }
     const el = document.querySelector('.dragging')
     if (el) {
         const boardBox = board.getBoundingClientRect()
@@ -16,7 +21,23 @@ board.addEventListener('mousemove', (e) => {
     }
 })
 
+board.addEventListener('touchstart', (e) =>{
+  if (!e.x) {
+    e.x = e.touches[0].clientX
+    e.y = e.touches[0].clientY
+  }
+  const selectedPiece = document.querySelector('.selected')
+  if(!selectedPiece) return
+  const cssCoord = mouseToCssBoardCoord({x: e.x, y: e.y})
+  const p = pieces.find(p => p.element === selectedPiece)
+  p.coord = cssCoord
+  document.querySelectorAll('.selected').forEach(el => {
+    el.classList.remove('selected')
+  })
+})
+
 const pieces = []
+let virtualPieces = []
 
 const setStartPosition = () => {
     board.innerHTML = ''
@@ -31,6 +52,7 @@ const setStartPosition = () => {
         pieces.push({
             element: piece,
             color: i < 16 ? 'white' : 'black',
+            type: START_POSITION.pieces[i % 16],
             set coord(c) {
                 this.element.setAttribute('data-coord', c)
             },
@@ -39,15 +61,40 @@ const setStartPosition = () => {
             }
         })
     }
+    //console.log(pieces)
+    virtualPieces = pieces.map(p => ({coord: p.coord, color: p.color, type: p.type}))
+    //console.log(virtualPieces)
+    //console.log(pieces)
+}
+
+const drawPieces = (indexToRemove) => {
+  if(indexToRemove != -1){
+    board.removeChild(pieces[indexToRemove].element)
+    pieces.splice(indexToRemove, 1)
+  }
+  console.log(pieces.length, virtualPieces.length)
+  pieces.forEach((p, i) => {
+    p.coord = virtualPieces[i].coord
+  })
+}
+
+const removePiece = (i) => {
+  
 }
 
 const setPieceListeners = ()=>{
-    pieces.forEach(p => {
+    pieces.forEach((p, i) => {
         let startDraggTime
-        p.element.addEventListener('mousedown', (e) => {
-            [...document.querySelectorAll('.selected')].forEach(el => {
-                if (p.element !== el) el.classList.remove('selected')
-            })
+        p.element.addEventListener('touchstart', (e) => {
+            e.stopPropagation()
+            if(!e.x){
+              e.x = e.touches[0].clientX
+              e.y = e.touches[0].clientY
+            }
+            
+            document.querySelectorAll('.selected').forEach(el => {
+                    if (p.element !== el) el.classList.remove('selected')
+                })
             startDraggTime = new Date().getTime()
             p.element.classList.add('dragging')
             p.element.classList.toggle('selected')
@@ -55,17 +102,38 @@ const setPieceListeners = ()=>{
             p.element.style.setProperty('--x', e.x - boardBox.x)
             p.element.style.setProperty('--y', e.y - boardBox.y)
         })
-        p.element.addEventListener('mouseup', (e) => {
+        p.element.addEventListener('touchend', (e) => {
+            
+            if(!e.x){
+              e.x = e.changedTouches[0].clientX
+              e.y = e.changedTouches[0].clientY
+            }
+            
             const diff = new Date().getTime() - startDraggTime
             if (diff > 130) p.element.classList.remove('selected')
             p.element.classList.remove('dragging')
 
-            const boardBox = board.getBoundingClientRect()
-            const x = Math.ceil((e.x - boardBox.x) / boardBox.width * 8).toString()
-            const y = (9 - Math.ceil((e.y - boardBox.y) / boardBox.height * 8)).toString()
-            p.coord = x + y
+            
+            const cssCoord = mouseToCssBoardCoord({x: e.x,  y: e.y})
+            
+            const indexToRemove = virtualPieces.findIndex(p => p.coord === cssCoord)
+            virtualPieces[i].coord = cssCoord
+            if(indexToRemove != -1){
+              virtualPieces.splice(indexToRemove, 1)
+            }
+            
+            
+            drawPieces(indexToRemove)
+            //p.coord = cssCoord
         })
     })
+}
+
+const mouseToCssBoardCoord = ({x, y}) => {
+  const boardBox = board.getBoundingClientRect()
+  const _x = Math.ceil((x - boardBox.x) / boardBox.width * 8).toString()
+  const _y = Math.ceil(8-(y - boardBox.y) / boardBox.height * 8).toString()
+  return _x + _y
 }
 
 
